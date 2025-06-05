@@ -6,5 +6,4 @@ package System;
  */
 public class Pesssoa {
     
-    private Integer id;
 }

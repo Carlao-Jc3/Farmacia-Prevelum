@@ -28,6 +28,17 @@ use prevelum;
 --
 -- Estrutura da tabela `produtos`
 --
+CREATE TABLE `pessoa` (
+`id` bigint(20) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+`nome` text DEFAULT NULL,
+`cpf` int DEFAULT NULL,
+`genero` boolean DEFAULT NULL
+);
+SELECT nome, 
+       CASE WHEN genero = TRUE THEN 'Masculino' 
+            WHEN genero = FALSE THEN 'Feminino' 
+       END AS genero
+FROM pessoa;
 
 CREATE TABLE `produtos` (
   `id` bigint(20) UNSIGNED NOT NULL,
@@ -45,6 +56,7 @@ INSERT INTO `produtos` (`id`, `nome`, `valor`, `status`) VALUES
 (3, 'Dipurona', 800, 'A venda'),
 (4, 'Água oxigenada', 4800, 'A venda'),
 (5, 'Corticoide', 400, 'A Venda');
+
 
 --
 -- Índices para tabelas despejadas
