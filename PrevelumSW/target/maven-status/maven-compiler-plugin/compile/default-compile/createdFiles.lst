@@ -1,3 +1,4 @@
+Interfaces\clientesVIEW$3.class
 Interfaces\loginVIEW.class
 Interfaces\compraVIEW.class
 Interfaces\vendasVIEW.class
@@ -5,6 +6,7 @@ Interfaces\produtosVIEW.class
 System\Logins.class
 Interfaces\escalaVIEW.class
 Interfaces\inicioVIEW.class
+Interfaces\clientesVIEW$2.class
 System\Produtos.class
 Interfaces\vendasVIEW$1.class
 System\conectaDAO.class
