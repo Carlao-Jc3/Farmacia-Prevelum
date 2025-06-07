@@ -1,12 +1,11 @@
-Interfaces\clientesVIEW$3.class
 Interfaces\loginVIEW.class
 Interfaces\compraVIEW.class
+Interfaces\loginVIEW$3.class
 Interfaces\vendasVIEW.class
 Interfaces\produtosVIEW.class
 System\Logins.class
 Interfaces\escalaVIEW.class
 Interfaces\inicioVIEW.class
-Interfaces\clientesVIEW$2.class
 System\Produtos.class
 Interfaces\vendasVIEW$1.class
 System\conectaDAO.class
@@ -16,6 +15,7 @@ Interfaces\produtosVIEW$1.class
 System\PrevélumTec.class
 Interfaces\loginVIEW$1.class
 Interfaces\compraVIEW$1.class
+Interfaces\loginVIEW$2.class
 Interfaces\clientesVIEW$1.class
 Interfaces\inicioVIEW$1.class
 System\Pesssoa.class
