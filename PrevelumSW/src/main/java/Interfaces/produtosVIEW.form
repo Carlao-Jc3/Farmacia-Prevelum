@@ -56,7 +56,7 @@
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
-              <Component id="jPanel2" alignment="0" pref="745" max="32767" attributes="0"/>
+              <Component id="jPanel2" alignment="0" pref="757" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
