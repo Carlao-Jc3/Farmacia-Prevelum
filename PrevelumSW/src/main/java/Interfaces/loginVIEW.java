@@ -57,7 +57,6 @@ public class loginVIEW extends javax.swing.JFrame {
         jLabel4.setText("Usuário");
 
         pfSenha.setBackground(new java.awt.Color(255, 255, 255));
-        pfSenha.setText("jPasswordField1");
         pfSenha.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
         pfSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,7 +145,8 @@ public class loginVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_pfSenhaActionPerformed
 
     private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterActionPerformed
-        // TODO add your handling code here:
+        inicioVIEW telaIni = new inicioVIEW();
+        telaIni.setVisible(true);
     }//GEN-LAST:event_btnEnterActionPerformed
 
     /**
