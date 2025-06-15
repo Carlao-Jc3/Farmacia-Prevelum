@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Interfaces;
 
 /**
@@ -15,6 +11,7 @@ public class inicioVIEW extends javax.swing.JFrame {
      */
     public inicioVIEW() {
         initComponents();
+        txtCliente.setEnabled(false);
     }
 
     /**
@@ -195,16 +192,19 @@ public class inicioVIEW extends javax.swing.JFrame {
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         clientesVIEW telaCli = new clientesVIEW();
         telaCli.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
         vendasVIEW telaVen = new vendasVIEW();
         telaVen.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
         produtosVIEW telaPro = new produtosVIEW();
         telaPro.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnProdutosActionPerformed
 
     /**

@@ -1,8 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Interfaces;
+
+import System.GerenciadorDados;
+import System.Produtos;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -10,11 +12,36 @@ package Interfaces;
  */
 public class produtosVIEW extends javax.swing.JFrame {
 
+    private GerenciadorDados gerenciador;
+
     /**
      * Creates new form produtosVIEW
      */
     public produtosVIEW() {
         initComponents();
+        gerenciador = GerenciadorDados.getInstance();
+        txtPes.setEnabled(false);
+        atualizarTabela(gerenciador.listarProdutos());
+    }
+
+    private void atualizarTabela(List<Produtos> produtos) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("Utilidade");
+        modelo.addColumn("Valor");
+
+        for (Produtos p : produtos) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getNome(),
+                p.getUtilidade(),
+                p.getValor()
+            });
+        }
+
+        jTable1.setModel(modelo);
+
     }
 
     /**
@@ -304,34 +331,71 @@ public class produtosVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-       dispose();
+        dispose();
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-         clientesVIEW telaCli = new clientesVIEW();
+        clientesVIEW telaCli = new clientesVIEW();
         telaCli.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
         vendasVIEW telaVen = new vendasVIEW();
         telaVen.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
-        produtosVIEW telaPro = new produtosVIEW();
-        telaPro.setVisible(true);
+        atualizarTabela(gerenciador.listarProdutos());
     }//GEN-LAST:event_btnProdutosActionPerformed
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            int idProduto = (int) jTable1.getValueAt(selectedRow, 0);
+            gerenciador.marcarComoVendido(idProduto);
+            atualizarTabela(gerenciador.listarProdutos());
+            JOptionPane.showMessageDialog(this, "Produto marcado como vendido!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para vender!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnCadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadActionPerformed
-        // TODO add your handling code here:
+        try {
+            String nome = txtNome.getText().trim();
+            String utilidade = txtUtil.getText().trim();
+            double valor = Double.parseDouble(txtValor.getText().trim());
+
+            if (nome.isEmpty() || utilidade.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos obrigatórios!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Produtos produto = new Produtos(0, nome, utilidade, valor, "A venda");
+            gerenciador.adicionarProdutos(produto);
+            atualizarTabela(gerenciador.listarProdutos());
+
+            txtNome.setText("");
+            txtUtil.setText("");
+            txtValor.setText("");
+            JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Valor deve ser um número válido!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnCadActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            int idProduto = (int) jTable1.getValueAt(selectedRow, 0);
+            gerenciador.excluirProduto(idProduto);
+            atualizarTabela(gerenciador.listarProdutos());
+            JOptionPane.showMessageDialog(this, "Produto excluido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
@@ -348,16 +412,24 @@ public class produtosVIEW extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(produtosVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(produtosVIEW.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(produtosVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(produtosVIEW.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(produtosVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(produtosVIEW.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(produtosVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(produtosVIEW.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

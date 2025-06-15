@@ -4,17 +4,15 @@
  */
 package Interfaces;
 
-/**
- *
- * @author Carlos Eduardo
- */
-public class loginVIEW extends javax.swing.JFrame {
+import javax.swing.JOptionPane;
+import service.LoginService;
 
-    /**
-     * Creates new form loginVIEW
-     */
+public class loginVIEW extends javax.swing.JFrame {
+    private LoginService loginService;
+
     public loginVIEW() {
         initComponents();
+        loginService = new LoginService();
     }
 
     /**
@@ -141,12 +139,20 @@ public class loginVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void pfSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pfSenhaActionPerformed
-        // TODO add your handling code here:
+        btnEnterActionPerformed(evt);
     }//GEN-LAST:event_pfSenhaActionPerformed
 
     private void btnEnterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterActionPerformed
-        inicioVIEW telaIni = new inicioVIEW();
-        telaIni.setVisible(true);
+        String usuario = txtUser.getText().trim();
+        String senha = new String(pfSenha.getPassword()).trim();
+        
+        if(loginService.autenticar(usuario, senha)){
+            inicioVIEW telaIni = new inicioVIEW();
+            telaIni.setVisible(true);
+            dispose();
+        }else {
+            JOptionPane.showMessageDialog(this, "Usuario ou senha inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnEnterActionPerformed
 
     /**

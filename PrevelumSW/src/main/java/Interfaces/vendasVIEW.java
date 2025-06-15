@@ -1,22 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Interfaces;
+import System.GerenciadorDados;
+import System.Produtos;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Carlos Eduardo
- */
 public class vendasVIEW extends javax.swing.JFrame {
+    private GerenciadorDados gerenciador;
 
     /**
      * Creates new form vendasVIEW
      */
     public vendasVIEW() {
         initComponents();
+        gerenciador = GerenciadorDados.getInstance();
+        txtPes1.setEnabled(false);
+        atualizarTabela(gerenciador.listarProdutosVendidos());
     }
-
+    
+    private void atualizarTabela(List<Produtos> produtos){
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("Utilidade");
+        modelo.addColumn("Valor");
+        
+        for (Produtos p: produtos){
+            modelo.addRow(new Object[]{
+               p.getId(),
+               p.getNome(),
+               p.getUtilidade(),
+               p.getValor()
+            });
+        }
+        
+        jTable2.setModel(modelo);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -213,16 +231,18 @@ public class vendasVIEW extends javax.swing.JFrame {
     private void btnClientes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientes1ActionPerformed
         clientesVIEW telaCli = new clientesVIEW();
         telaCli.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnClientes1ActionPerformed
 
     private void btnVendas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendas1ActionPerformed
-        vendasVIEW telaVen = new vendasVIEW();
-        telaVen.setVisible(true);
+        atualizarTabela(gerenciador.listarProdutosVendidos());
     }//GEN-LAST:event_btnVendas1ActionPerformed
 
     private void btnProdutos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutos1ActionPerformed
         produtosVIEW telaPro = new produtosVIEW();
         telaPro.setVisible(true);
+        dispose();
+        
     }//GEN-LAST:event_btnProdutos1ActionPerformed
 
     /**

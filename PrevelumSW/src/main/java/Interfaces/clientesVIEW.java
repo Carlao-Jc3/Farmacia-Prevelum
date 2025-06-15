@@ -3,18 +3,47 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Interfaces;
+import System.Cliente;
+import java.util.List;
+import System.GerenciadorDados;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Carlos Eduardo
  */
 public class clientesVIEW extends javax.swing.JFrame {
+     private GerenciadorDados gerenciador;
+
 
     /**
      * Creates new form clientesVIEW
      */
     public clientesVIEW() {
         initComponents();
+        gerenciador = GerenciadorDados.getInstance();
+        atualizarTabela(gerenciador.listarClientes());
+    }
+    private void atualizarTabela(List<Cliente> clientes) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("CPF");
+        modelo.addColumn("Telefone");
+        modelo.addColumn("Email");
+
+        for (Cliente c : clientes) {
+            modelo.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getCpf(),
+                c.getTelefone(),
+                c.getEmail()
+            });
+        }
+
+        jTable2.setModel(modelo);
     }
 
     /**
@@ -313,28 +342,63 @@ public class clientesVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSair1ActionPerformed
 
     private void btnClientes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientes1ActionPerformed
-        clientesVIEW telaCli = new clientesVIEW();
-        telaCli.setVisible(true);
+        atualizarTabela(gerenciador.listarClientes());
     }//GEN-LAST:event_btnClientes1ActionPerformed
 
     private void btnVendas1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendas1ActionPerformed
         vendasVIEW telaVen = new vendasVIEW();
         telaVen.setVisible(true);
+        dispose();   
     }//GEN-LAST:event_btnVendas1ActionPerformed
 
     private void btnProdutos1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutos1ActionPerformed
         produtosVIEW telaPro = new produtosVIEW();
         telaPro.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnProdutos1ActionPerformed
 
     private void btnCadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadActionPerformed
-        // TODO add your handling code here:
+        try {
+            String nome = txtNome.getText().trim();
+            String cpf = txtCPF.getText().trim();
+            String telefone = txtTele.getText().trim();
+            String email = txtEmail.getText().trim();
+
+            if (nome.isEmpty() || cpf.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha nome e CPF!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Cliente cliente = new Cliente(0, nome, cpf, telefone, email);
+            gerenciador.cadastrarCliente(cliente);
+            atualizarTabela(gerenciador.listarClientes());
+
+            txtNome.setText("");
+            txtCPF.setText("");
+            txtTele.setText("");
+            txtEmail.setText("");
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnCadActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable2.getSelectedRow();
+        if (selectedRow >= 0) {
+            int idCliente = (int) jTable2.getValueAt(selectedRow, 0);
+            gerenciador.removerCliente(idCliente);
+            atualizarTabela(gerenciador.listarClientes());
+            JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
-
+    
+    private void txtPes1KeyReleased(java.awt.event.KeyEvent evt) {
+        String termo = txtPes1.getText().trim();
+        atualizarTabela(gerenciador.pesquisarClientes(termo));
+    }
     /**
      * @param args the command line arguments
      */
