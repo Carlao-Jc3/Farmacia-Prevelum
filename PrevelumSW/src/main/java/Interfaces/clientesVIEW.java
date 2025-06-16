@@ -130,6 +130,11 @@ public class clientesVIEW extends javax.swing.JFrame {
 
         txtPes1.setBackground(new java.awt.Color(255, 255, 255));
         txtPes1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
+        txtPes1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPes1ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("🔍");
@@ -394,6 +399,11 @@ public class clientesVIEW extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um cliente para excluir!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void txtPes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPes1ActionPerformed
+        String termo = txtPes1.getText().trim();
+        atualizarTabela(gerenciador.pesquisarClientes(termo));
+    }//GEN-LAST:event_txtPes1ActionPerformed
     
     private void txtPes1KeyReleased(java.awt.event.KeyEvent evt) {
         String termo = txtPes1.getText().trim();

@@ -10,7 +10,7 @@ public class LoginService implements LoginInterface {
     public LoginService(){
         usuarios = new ArrayList<>();
         // Usuários pré-cadastrados
-        usuarios.add(new Usuario("adm", "adm123"));
+        usuarios.add(new Usuario("administrador", "adm123"));
         usuarios.add(new Usuario("operador", "op123"));
         usuarios.add(new Usuario("aprendiz", "apr123"));
     }
