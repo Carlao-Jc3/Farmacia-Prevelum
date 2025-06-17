@@ -5,7 +5,7 @@
 package Interfaces;
 
 import javax.swing.JOptionPane;
-import service.LoginService;
+import System.LoginService;
 
 public class loginVIEW extends javax.swing.JFrame {
     private LoginService loginService;

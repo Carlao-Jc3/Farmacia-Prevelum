@@ -1,6 +1,5 @@
-package Interfaces;
+package System;
 
-import System.Cliente;
 import java.util.List;
 
 public interface ClienteInterface {

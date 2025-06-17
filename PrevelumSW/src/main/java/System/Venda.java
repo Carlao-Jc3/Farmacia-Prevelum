@@ -1,13 +1,49 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package System;
+import java.time.LocalDateTime;
 
-/**
- *
- * @author Carlos Eduardo
- */
 public class Venda {
+    private int idV;
+    private int idP;
+    private Integer idC;
+    private LocalDateTime dataVenda;
+
+    public Venda(int idV, int idP, Integer idC, LocalDateTime dataVenda) {
+        this.idV = idV;
+        this.idP = idP;
+        this.idC = idC;
+        this.dataVenda = dataVenda;
+    }
+
+    public int getIdV() {
+        return idV;
+    }
+
+    public void setIdV(int idV) {
+        this.idV = idV;
+    }
+
+    public int getIdP() {
+        return idP;
+    }
+
+    public void setIdP(int idP) {
+        this.idP = idP;
+    }
+
+    public Integer getIdC() {
+        return idC;
+    }
+
+    public void setIdC(Integer idC) {
+        this.idC = idC;
+    }
+
+    public LocalDateTime getDataVenda() {
+        return dataVenda;
+    }
+
+    public void setDataVenda(LocalDateTime dataVenda) {
+        this.dataVenda = dataVenda;
+    }
     
 }

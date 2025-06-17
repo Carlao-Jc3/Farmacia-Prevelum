@@ -7,7 +7,7 @@ import java.sql.SQLException;
  *
  * @author Carlos Eduardo
  */
-public class conectaDAO {
+public class ConexaoBD {
     private static final String URL = "jdbc:mysql://localhost:3306/prevelum";
     private static final String USUARIO = "root";
     private static final String SENHA = "CAmysql2025DU";
