@@ -1,5 +1,6 @@
 package System;
 
+import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -7,18 +8,10 @@ import java.util.ArrayList;
  *
  * @author Carlos Eduardo
  */
-public class GerenciadorDados {
-
+public class GerenciadorDados implements ClienteInterface {
     private static GerenciadorDados instance = new GerenciadorDados();
-    private List<Produtos> produtos;
-    private List<Cliente> clientes;
-    private static int proximoIdProduto = 1;
-    private static int proximoIdCliente = 1;
-
-    private GerenciadorDados() {
-        produtos = new ArrayList<>();
-        clientes = new ArrayList<>();
-    }
+    
+    private GerenciadorDados() {}
 
     public static GerenciadorDados getInstance() {
         return instance;
@@ -26,79 +19,178 @@ public class GerenciadorDados {
     }
 
     public void adicionarProdutos(Produtos produto) {
-        produto.setId(proximoIdProduto++);
-        produto.setStatus("A venda");
-        produtos.add(produto);
+        String sql = "INSERT INTO Produtos (nome, utilidade, valor, status) VALUES (?,?,?,?)";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, produto.getNome());
+            stmt.setString(2, produto.getUtilidade());
+            stmt.setDouble(3, produto.getValor());
+            stmt.setString(4, produto.getStatus());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao adicionar produto: " + e.getMessage());
+        }
     }
 
     public void marcarComoVendido(int idProduto) {
-        for (Produtos p : produtos) {
-            if (p.getId() == idProduto) {
-                p.setStatus("Vendido");
-                break;
-            }
+        String sql = "UPDATE Produtos SET status = 'Vendido' WHERE id = ?";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao vender: " + e.getMessage());
         }
     }
 
-    public void excluirProduto(int idProduto) {
-        produtos.removeIf(produto -> produto.getId() == idProduto);
+    public void removerCliente(int IdCliente) {
+        String sql = "DELETE FROM Clientes WHERE id = ?";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, IdCliente);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao remover cliente: " + e.getMessage());
+        }
     }
 
     public List<Produtos> buscarProdutos(String termo) {
-        List<Produtos> resultados = new ArrayList<>();
+        List<Produtos> produtos = new ArrayList<>();
         termo = termo.toLowerCase();
         for (Produtos p : produtos) {
             if (p.getNome().toLowerCase().contains(termo) || p.getUtilidade().toLowerCase().contains(termo)) {
-                resultados.add(p);
+                produtos.add(p);
             }
         }
-        return resultados;
+        return produtos;
     }
 
     public void cadastrarCliente(Cliente cliente) {
-        cliente.setId(proximoIdCliente++);
-        clientes.add(cliente);
+        String sql = "INSERT INTO Clientes (nome, cpf, telefone, email) VALUES(?, ?, ?, ?)";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getText().trim());
+            stmt.setString(3, cliente.getTelefone());
+            stmt.setString(4, cliente.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao cadastrar cliente: " + e.getMessage());
+        }
     }
 
     public List<Cliente> listarClientes() {
-        return new ArrayList<>(clientes);
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM Clientes";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                clientes.add(new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getString("email")));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar clientes: " + e.getMessage());
+        }
+        return clientes;
     }
 
     public void atualizarCliente(Cliente cliente) {
-        for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).getId() == cliente.getId()) {
-                clientes.set(i, cliente);
-                break;
-            }
+        String sql = "UPDATE Clientes SET nome = ?, cliente = ?, telefone = ?, email = ?";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getText().trim());
+            stmt.setString(3, cliente.getTelefone());
+            stmt.setString(4, cliente.getEmail());
+            stmt.setInt(5, cliente.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao cadastrar cliente: " + e.getMessage());
         }
     }
-    public List<Produtos> listarProdutosVendidos() {
-    List<Produtos> vendidos = new ArrayList<>();
-    for (Produtos p : produtos) {
-        if ("Vendido".equals(p.getStatus())) {
-            vendidos.add(p);
-        }
-    }
-    return vendidos;
-}
 
-    public void removerCliente(int idCliente) {
-        clientes.removeIf(cliente -> cliente.getId() == idCliente);
+    public List<Produtos> listarProdutosVendidos() {
+        List<Produtos> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM Produtos WHERE status = 'Vendido'";
+        try (Connection conn = ConexaoBD.getConexao(); 
+             PreparedStatement stmt = conn.prepareStatement(sql); 
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                produtos.add(new Produtos(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("utilidade"),
+                        rs.getDouble("valor"),
+                        rs.getString("status")));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar produtos vendidos: " + e.getMessage());
+        }
+        return produtos;
+    }
+
+    public void excluirProduto(int idProduto) {
+        String sql = "DELETE FROM Produtos WHERE id = ?";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Erro ao excluir produto: " + e.getMessage());
+        }
     }
 
     public List<Cliente> pesquisarClientes(String cpf) {
-        List<Cliente> resultados = new ArrayList<>();
-        cpf = cpf.toLowerCase();
-        for (Cliente c : clientes) {
-            if (c.getCpf().toLowerCase().contains(cpf)) {
-                resultados.add(c);
+        List<Cliente> clientes = new ArrayList<Cliente>();
+        String sql = "SELECT * FROM Clientes WHERE cpf LIKE ?";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + cpf + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                clientes.add(new Cliente(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getString("email")
+                ));
             }
+        } catch (SQLException e) {
+            System.err.println("Erro ao pesquisar Cliente: " + e.getMessage());
         }
-        return resultados;
+        return clientes;
     }
 
     public List<Produtos> listarProdutos() {
-        return new ArrayList<>(produtos);
+        List<Produtos> produtos = new ArrayList<>();
+        String sql = "SELECT * FROM Produtos";
+        try (Connection conn = ConexaoBD.getConexao(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                produtos.add(new Produtos(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("utilidade"),
+                        rs.getDouble("valor"),
+                        rs.getString("status")));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar produtos: " + e.getMessage());
+        }
+        return produtos;
+    }
+    
+    public void registrarVenda(Venda venda){
+        String sql = "INSERT INTO Vendas (id_P, id_C, data) VALUES (?, ?, ?) ";
+        try (Connection conn = ConexaoBD.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, venda.getIdP());
+            if (venda.getIdC() != null){
+                stmt.setInt(2, venda.getIdC());
+            } else {
+                stmt.setNull(2, Types.INTEGER);
+            }
+            stmt.setTimestamp(3, Timestamp.valueOf(venda.getDataVenda()));
+            stmt.execute();
+        }catch (SQLException e){
+            System.err.println("Erro ao registrar venda: "+ e.getMessage());
+        }
     }
 
 }

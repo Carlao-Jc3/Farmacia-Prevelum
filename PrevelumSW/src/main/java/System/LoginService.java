@@ -15,7 +15,25 @@ public class LoginService implements LoginInterface {
             stmt.setString(1, usuario);
             stmt.setString(2, senha);
             ResultSet rs = stmt.executeQuery();
-            return rs.next
+            return rs.next();
+        } catch (SQLException e) {
+            System.err.println("Erro ao autenticar: " + e.getMessage());
+            return false;
         }
+    }
+    
+    public String getNivelAcesso(String usuario){
+        String sql =  "SELECT nivel_acesso FROM Usuarios WHERE Usuario = ? ";
+        try (Connection conn = ConexaoBD.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, usuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                return rs.getString("nivel_acesso");
+            }
+        }catch (SQLException e){
+            System.err.println("Erro ao obter nível de acesso: " + e.getMessage());
+        }
+        return null;        
     }
 }
