@@ -17,3 +17,8 @@ Realizar e facilitar o gerenciamento de cadastros e vendas de produtos de farmá
   - Java Ant
   - MySQL
   - JDK 17
+
+## Desenvolvedores
+  - Carlos Eduardo (www.linkedin.com/in/
+carlos-eduardo-henrique-garibaldi-921683332)
+
